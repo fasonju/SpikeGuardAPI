@@ -30,7 +30,9 @@ func main() {
 		log.Fatalln("Could not connect to the database")
 	}
 
-	if err := r.Run(":8000"); err != nil {
+	var port = os.Getenv("PORT")
+
+	if err := r.Run(":" + port); err != nil {
 		log.Fatalln("Could not start the server")
 	}
 }
