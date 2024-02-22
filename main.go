@@ -51,7 +51,7 @@ func setupConnection() (*sql.DB, error) {
 		User:                 os.Getenv("MYSQL_USER"),
 		Passwd:               os.Getenv("MYSQL_PASSWORD"),
 		Net:                  "tcp",
-		Addr:                 os.Getenv("MYSQL_HOST"),
+		Addr:                 os.Getenv("MYSQL_HOST") + ":" + os.Getenv("MYSQL_PORT"),
 		DBName:               os.Getenv("MYSQL_DATABASE"),
 		AllowNativePasswords: true,
 	}
