@@ -1,0 +1,42 @@
+openapi: 3.0.3
+info:
+  title: SpikeGuard API
+  description: To use this visualisation tool, you need to run the server on localhost 3000. Do so by setting the env variable PORT to 3000.
+  version: 1.0.0
+servers:
+  - url: 'http://localhost:3000'
+    description: Local server
+paths:
+  /markers:
+    get:
+      description: Get all markers
+      responses:
+        '200':
+          description: A list of markers
+        '500':
+            description: Internal server error, database is down
+    post:
+      description: create a list of new markers
+      requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  markers:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        lat:
+                          type: number
+                        lng:
+                          type: number
+      responses:
+        '201':
+          description: Successfully entered new markers
+        '500':
+            description: Internal server error, database is down
+        '400':
+            description: Bad request, invalid input
