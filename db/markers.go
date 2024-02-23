@@ -35,8 +35,8 @@ func QueryMarkers() ([]models.Marker, error) {
 	return markers, nil
 }
 
-func InsertMarkers(markers []models.Marker) (sql.Result, error) {
-	query := "INSERT INTO markers (latitude, longitude) VALUES (?, ?)"
+func InsertMarkers(markers []models.Marker) (int64, error) {
+	query := "INSERT INTO markers (latitude, longitude) VALUES "
 	var inserts []string
 	var params []interface{}
 	for _, marker := range markers {
@@ -52,14 +52,19 @@ func InsertMarkers(markers []models.Marker) (sql.Result, error) {
 
 	stmt, err := DB.PrepareContext(ctx, query)
 	if err != nil {
-		return nil, err
+		return 0, err
 	}
 	defer stmt.Close()
 
 	res, err := stmt.ExecContext(ctx, params...)
 	if err != nil {
-		return res, err
+		return 0, err
 	}
 
-	return res, nil
+	rowsCount, err := res.RowsAffected()
+	if err != nil {
+		return 0, err
+	}
+
+	return rowsCount, nil
 }

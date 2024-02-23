@@ -26,7 +26,7 @@ func MarkersPOST(c *gin.Context) {
 		return
 	}
 
-	res, err := db.InsertMarkers(requestJson.Markers)
+	rowsCount, err := db.InsertMarkers(requestJson.Markers)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -34,7 +34,7 @@ func MarkersPOST(c *gin.Context) {
 	}
 
 	// create a list of markers
-	c.JSON(http.StatusCreated, gin.H{"result": res})
+	c.JSON(http.StatusCreated, gin.H{"rows_affected": rowsCount, "markers": requestJson.Markers})
 }
 
 func MarkersDelete(c *gin.Context) {
