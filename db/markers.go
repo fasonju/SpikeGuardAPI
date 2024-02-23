@@ -1,8 +1,11 @@
 package db
 
 import (
+	"context"
 	"database/sql"
 	"prototype_app_api/models"
+	"strings"
+	"time"
 )
 
 var DB *sql.DB
@@ -30,4 +33,33 @@ func QueryMarkers() ([]models.Marker, error) {
 	}
 
 	return markers, nil
+}
+
+func InsertMarkers(markers []models.Marker) (sql.Result, error) {
+	query := "INSERT INTO markers (latitude, longitude) VALUES (?, ?)"
+	var inserts []string
+	var params []interface{}
+	for _, marker := range markers {
+		inserts = append(inserts, "(?, ?)")
+		params = append(params, marker.Latitude, marker.Longitude)
+	}
+
+	queryVals := strings.Join(inserts, ",")
+	query = query + queryVals
+
+	ctx, cancelfunc := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancelfunc()
+
+	stmt, err := DB.PrepareContext(ctx, query)
+	if err != nil {
+		return nil, err
+	}
+	defer stmt.Close()
+
+	res, err := stmt.ExecContext(ctx, params...)
+	if err != nil {
+		return res, err
+	}
+
+	return res, nil
 }
