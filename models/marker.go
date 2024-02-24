@@ -9,3 +9,7 @@ type Marker struct {
 type MarkerPostRequest struct {
 	Markers []Marker `json:"markers"`
 }
+
+type MarkerDeleteRequest struct {
+	ID int `json:"id"`
+}

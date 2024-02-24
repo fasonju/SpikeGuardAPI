@@ -18,21 +18,21 @@ paths:
     post:
       description: create a list of new markers
       requestBody:
-          required: true
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  markers:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        lat:
-                          type: number
-                        lng:
-                          type: number
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                markers:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      lat:
+                        type: number
+                      lng:
+                        type: number
       responses:
         '201':
           description: Successfully entered new markers
@@ -40,3 +40,19 @@ paths:
             description: Internal server error, database is down
         '400':
             description: Bad request, invalid input
+    delete:
+      description: Delete a marker with specific id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: number
+      responses:
+        '200':
+          description: Successfully deleted marker
+        '500':
+          description: Internal server error, database is down

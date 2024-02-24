@@ -38,8 +38,18 @@ func MarkersPOST(c *gin.Context) {
 }
 
 func MarkersDelete(c *gin.Context) {
-	// delete a marker
-	c.JSON(http.StatusNotImplemented, gin.H{})
+	var requestJson models.MarkerDeleteRequest
+	if err := c.ShouldBindJSON(&requestJson); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	if db.DeleteMarker(requestJson.ID) != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Could not delete the marker"})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{})
 }
 
 func MarkersPUT(c *gin.Context) {

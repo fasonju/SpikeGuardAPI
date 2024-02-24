@@ -11,25 +11,25 @@ import (
 var DB *sql.DB
 
 func QueryMarkers() ([]models.Marker, error) {
-	rows, err := DB.Query("SELECT * FROM markers")
+	ctx, cancelfunc := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancelfunc()
+
+	rows, err := DB.QueryContext(ctx, "SELECT id, latitude, longitude FROM markers")
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
 	var markers []models.Marker
-
-	//loop through rows using Scan to assign column data to struct fields
 	for rows.Next() {
-		var m models.Marker
-		if err := rows.Scan(&m.ID, &m.Latitude, &m.Longitude); err != nil {
-			return markers, err
+		var marker models.Marker
+		if err := rows.Scan(&marker.ID, &marker.Latitude, &marker.Longitude); err != nil {
+			return nil, err
 		}
-		markers = append(markers, m)
+		markers = append(markers, marker)
 	}
-
 	if err := rows.Err(); err != nil {
-		return markers, err
+		return nil, err
 	}
 
 	return markers, nil
@@ -67,4 +67,17 @@ func InsertMarkers(markers []models.Marker) (int64, error) {
 	}
 
 	return rowsCount, nil
+}
+
+func DeleteMarker(id int) error {
+	ctx, cancelfunc := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancelfunc()
+
+	stmt, err := DB.PrepareContext(ctx, "DELETE FROM markers WHERE id=?"); if err != nil {
+		return err
+	}
+	defer stmt.Close()
+
+	_, err = stmt.ExecContext(ctx, id);
+	return err
 }
