@@ -81,3 +81,16 @@ func DeleteMarker(id int) error {
 	_, err = stmt.ExecContext(ctx, id);
 	return err
 }
+
+func InsertMarker(latitude float64, longitude float64) error {
+	ctx, cancelfunc := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancelfunc()
+
+	stmt, err := DB.PrepareContext(ctx, "INSERT INTO markers (latitude, longitude) VALUES (?, ?)"); if err != nil {
+		return err
+	}
+	defer stmt.Close()
+
+	_, err = stmt.ExecContext(ctx, latitude, longitude);
+	return err
+}

@@ -13,3 +13,8 @@ type MarkerPostRequest struct {
 type MarkerDeleteRequest struct {
 	ID int `json:"id"`
 }
+
+type MarkerPutRequest struct {
+	Latitude  float64 `json:"latitude"`
+	Longitude float64 `json:"longitude"`
+}

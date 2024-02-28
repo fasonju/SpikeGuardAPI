@@ -14,7 +14,7 @@ paths:
         '200':
           description: A list of markers
         '500':
-            description: Internal server error, database is down
+          description: Internal server error, database is down
     post:
       description: create a list of new markers
       requestBody:
@@ -37,9 +37,9 @@ paths:
         '201':
           description: Successfully entered new markers
         '500':
-            description: Internal server error, database is down
+          description: Internal server error, database is down
         '400':
-            description: Bad request, invalid input
+          description: Bad request, invalid input
     delete:
       description: Delete a marker with specific id
       requestBody:
@@ -54,5 +54,23 @@ paths:
       responses:
         '200':
           description: Successfully deleted marker
+        '500':
+          description: Internal server error, database is down
+    put:
+      description: Add a marker
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                lat:
+                  type: number
+                lng:
+                  type: number
+      responses:
+        '201':
+          description: Successfully added marker
         '500':
           description: Internal server error, database is down

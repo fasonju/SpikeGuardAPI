@@ -53,6 +53,15 @@ func MarkersDelete(c *gin.Context) {
 }
 
 func MarkersPUT(c *gin.Context) {
-	// update a marker
-	c.JSON(http.StatusNotImplemented, gin.H{})
+	var requestJson models.MarkerPutRequest
+	if err := c.ShouldBindJSON(&requestJson); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	if db.InsertMarker(requestJson.Latitude, requestJson.Longitude) != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Could not insert the marker"})
+	}
+
+	c.JSON(http.StatusCreated, gin.H{})
 }
