@@ -74,4 +74,50 @@ paths:
           description: Successfully added marker
         '500':
           description: Internal server error, database is down
-  /unvalidate
+  /report:
+    put:
+      description: Report a spiking
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                victim_name:
+                  type: string
+                victim_last_name:
+                  type: string
+                victim_phone:
+                  type: string
+                longitude:
+                  type: number
+                latitude:
+                  type: number
+                report_datetime:
+                  type: string
+                emergency_contact_phone:
+                  type: string
+                victim_country:
+                  type: string
+                victim_city:
+                  type: string
+                victim_address:
+                  type: string
+
+              example:
+                victim_name: "John"
+                victim_last_name: "Doe"
+                victim_phone: "123456789"
+                longitude: 12.123
+                latitude: 12.123
+                report_datetime: "2021-01-01T12:00:00"
+                emergency_contact_phone: "123456789"
+                victim_country: "USA"
+                victim_city: "New York"
+                victim_address: "123 Main St"
+      responses:
+        '201':
+          description: Successfully reported marker
+        '500':
+          description: Internal server error, database is down
