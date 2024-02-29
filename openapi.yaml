@@ -74,3 +74,4 @@ paths:
           description: Successfully added marker
         '500':
           description: Internal server error, database is down
+  /unvalidate

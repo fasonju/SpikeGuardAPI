@@ -14,11 +14,11 @@ func ReportPUT(c *gin.Context) {
 		return
 	}
 
-	rowsModified, err := db.InsertReport(requestJson)
+	err := db.InsertReport(requestJson)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"rows_modified": rowsModified})
+	c.JSON(http.StatusOK, gin.H{})
 }

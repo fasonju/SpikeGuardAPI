@@ -43,6 +43,7 @@ func setupRouter() *gin.Engine {
 	r.POST("/markers", endpoints.MarkersPOST)
 	r.DELETE("/markers", endpoints.MarkersDelete)
 	r.PUT("/markers", endpoints.MarkersPUT)
+	r.PUT("/report", endpoints.ReportPUT)
 	return r
 }
 
