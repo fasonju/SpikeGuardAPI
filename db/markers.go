@@ -2,17 +2,14 @@ package db
 
 import (
 	"context"
-	"database/sql"
 	"prototype_app_api/models"
 	"strings"
 	"time"
 )
 
-var DB *sql.DB
-
 func QueryMarkers() ([]models.Marker, error) {
-	ctx, cancelfunc := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancelfunc()
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
 
 	rows, err := DB.QueryContext(ctx, "SELECT id, latitude, longitude FROM markers")
 	if err != nil {
@@ -23,7 +20,9 @@ func QueryMarkers() ([]models.Marker, error) {
 	var markers []models.Marker
 	for rows.Next() {
 		var marker models.Marker
-		if err := rows.Scan(&marker.ID, &marker.Latitude, &marker.Longitude); err != nil {
+		if err := rows.Scan(&marker.ID,
+			&marker.Latitude,
+			&marker.Longitude); err != nil {
 			return nil, err
 		}
 		markers = append(markers, marker)
@@ -44,11 +43,11 @@ func InsertMarkers(markers []models.Marker) (int64, error) {
 		params = append(params, marker.Latitude, marker.Longitude)
 	}
 
-	queryVals := strings.Join(inserts, ",")
-	query = query + queryVals
+	queryVars := strings.Join(inserts, ",")
+	query = query + queryVars
 
-	ctx, cancelfunc := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancelfunc()
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
 
 	stmt, err := DB.PrepareContext(ctx, query)
 	if err != nil {
@@ -70,27 +69,30 @@ func InsertMarkers(markers []models.Marker) (int64, error) {
 }
 
 func DeleteMarker(id int) error {
-	ctx, cancelfunc := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancelfunc()
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
 
-	stmt, err := DB.PrepareContext(ctx, "DELETE FROM markers WHERE id=?"); if err != nil {
+	stmt, err := DB.PrepareContext(ctx, "DELETE FROM markers WHERE id=?")
+	if err != nil {
 		return err
 	}
 	defer stmt.Close()
 
-	_, err = stmt.ExecContext(ctx, id);
+	_, err = stmt.ExecContext(ctx, id)
 	return err
 }
 
 func InsertMarker(latitude float64, longitude float64) error {
-	ctx, cancelfunc := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancelfunc()
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
 
-	stmt, err := DB.PrepareContext(ctx, "INSERT INTO markers (latitude, longitude) VALUES (?, ?)"); if err != nil {
+	stmt, err := DB.PrepareContext(ctx,
+		"INSERT INTO markers (latitude, longitude) VALUES (?, ?)")
+	if err != nil {
 		return err
 	}
 	defer stmt.Close()
 
-	_, err = stmt.ExecContext(ctx, latitude, longitude);
+	_, err = stmt.ExecContext(ctx, latitude, longitude)
 	return err
 }
